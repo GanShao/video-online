@@ -13,10 +13,6 @@ public class EurekaApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(EurekaApplication.class);
 
-//	public static void main(String[] args) {
-//		SpringApplication.run(EurekaApplication.class, args);
-//	}
-
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(EurekaApplication.class);
         Environment env = app.run(args).getEnvironment();
