@@ -1,7 +1,8 @@
 package com.video.system.controller;
 
-import com.video.system.domain.Test;
-import com.video.system.service.TestService;
+
+import com.video.server.domain.Test;
+import com.video.server.service.TestService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
