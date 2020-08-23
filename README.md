@@ -5,3 +5,5 @@
    @Mapper 注解针对的是一个一个的类，相当于是一个一个 Mapper.xml 文件。而一个接口一个接口的使用 @Mapper，太麻烦了，
    于是 @MapperScan 就应用而生了。@MapperScan 配置一个或多个包路径，自动的扫描这些包路径下的类，自动的为它们生成代理类。
 
+2、server作为jar包被依赖，它的resouces文件夹下面的配置文件和system会有冲突。
+    解决办法是新建config文件夹。因为spring默认读到resouces/config下的文件。
