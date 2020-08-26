@@ -18,5 +18,5 @@ public class TestService {
         TestExample testExample = new TestExample();
         testExample.setOrderByClause("id desc");
         return testMapper.selectByExample(testExample);
-    };
+    }
 }
