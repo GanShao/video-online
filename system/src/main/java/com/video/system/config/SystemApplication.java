@@ -1,4 +1,4 @@
-package com.video.system;
+package com.video.system.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

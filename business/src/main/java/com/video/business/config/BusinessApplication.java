@@ -1,4 +1,4 @@
-package com.video.business;
+package com.video.business.config;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
