@@ -476,8 +476,29 @@
     export default {
         name: "admin",
         mounted: function () {
+            let _this = this;
             $("body").removeClass("login-layout light-login");
             $("body").attr("class", "no-skin");
+            //第一次登录进来初始化的时候，也发生改变  // sidebar激活样式方法二
+            _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+        },
+
+        /**
+         * vue 内置的watch,用来监测vue实例上的数据变动，$route也是一个变量
+         * 这里只是监听admin下面的子组件
+         */
+        watch: {
+            $route: {
+                handler: function (val, oldVal) {
+                    console.log("---->页面跳转:", val, oldVal);
+                    // sidebar激活样式方法二
+                    let _this = this; //⭐声明一个变量指向Vue实例this，保证作用域一致
+                    _this.$nextTick(function () { //⭐页面加载完成后执行
+                        //⭐️⭐⭐使用route路由里面的name属性得到菜单id，因为约定id的配置要和路由有关，即约定优于配置
+                        _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+                    })
+                }
+            }
         },
         methods: {
             login() {
