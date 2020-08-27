@@ -484,7 +484,7 @@
         },
 
         /**
-         * vue 内置的watch,用来监测vue实例上的数据变动，$route也是一个变量
+         * vue 内置的watch,用来监测vue实例上的数据变动，$route 表示(当前路由信息对象)
          * 这里只是监听admin下面的子组件
          */
         watch: {

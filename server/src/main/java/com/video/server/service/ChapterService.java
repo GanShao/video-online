@@ -17,7 +17,7 @@ public class ChapterService {
     @Resource
     private ChapterMapper chapterMapper;
 
-    public List<ChapterDto> query(){
+    public List<ChapterDto> list(){
         ChapterExample chapterExample = new ChapterExample();
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         List<ChapterDto> chapterDtoList = new ArrayList();
