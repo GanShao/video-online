@@ -1,5 +1,6 @@
 package com.video.server.service;
 
+import com.github.pagehelper.PageHelper;
 import com.video.server.domain.Chapter;
 import com.video.server.domain.ChapterExample;
 import com.video.server.dto.ChapterDto;
@@ -18,6 +19,8 @@ public class ChapterService {
     private ChapterMapper chapterMapper;
 
     public List<ChapterDto> list(){
+        //插件分页语句规则：调用startPage方法之后，对执行的第一个select语句会进行分页
+        PageHelper.startPage(1,1);//页码从1开始
         ChapterExample chapterExample = new ChapterExample();
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         List<ChapterDto> chapterDtoList = new ArrayList();
