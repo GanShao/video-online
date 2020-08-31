@@ -22,7 +22,7 @@ public class ChapterService {
 
     public void queryChapterPage(PageDto pageDto){
         //插件分页语句规则：调用startPage方法之后，对执行的第一个select语句会进行分页
-        PageHelper.startPage(1,5);//页码从1开始
+        PageHelper.startPage(pageDto.getPage(),pageDto.getSize());//页码从1开始
         ChapterExample chapterExample = new ChapterExample();
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         PageInfo<Chapter> pageInfo = new PageInfo(chapterList);

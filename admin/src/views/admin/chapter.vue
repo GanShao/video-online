@@ -1,11 +1,12 @@
 <template>
   <div>
     <p>
-      <button v-on:click="queryChapterPage()" class="btn btn-white btn-default btn-round">
+      <button v-on:click="queryChapterPage(1)" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-refresh blue"></i>
         刷新
       </button>
     </p>
+    <pagination ref="pagination" v-bind:list="queryChapterPage" v-bind:itemCount="8"></pagination>
 
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
@@ -19,9 +20,9 @@
 
       <tbody>
       <tr v-for="chapter in chapters">
-        <td>{{chapter.id}}}</td>
-        <td>{{chapter.name}}}</td>
-        <td>{{chapter.courseId}}}</td>
+        <td>{{chapter.id}}</td>
+        <td>{{chapter.name}}</td>
+        <td>{{chapter.courseId}}</td>
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -84,30 +85,34 @@
 </template>
 
 <script>
+    import Pagination from "../../components/pagination";
     export default {
+        components: {Pagination},
         name: "chapter",
         data: function () {
             return {
-                chapters: []
+                chapters: [],
             }
         },
         mounted: function () {
             let _this = this;
-            _this.queryChapterPage();
+            _this.$refs.pagination.size = 5;
+            _this.queryChapterPage(1);
             // sidebar激活样式方法一
             // this.$parent.activeSidebar("business-chapter-sidebar");
         },
         methods: {
-            queryChapterPage() {
+            queryChapterPage(page) {
                 let _this = this;
                 //post请求有两种方式：1、表单方式。2、json流的方式
                 //jQuery默认使用表单的方式，但是vue,angular使用流的方式
                 _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/queryChapterPage", {
-                    page: 1,
-                    size: 5
+                    page: page,
+                    size: _this.$refs.pagination.size,
                 }).then((response) => {
-                    console.log("查询大章列表", response);
+                    console.log("查询大章列表",  response.data.list);
                     _this.chapters = response.data.list;
+                    _this.$refs.pagination.render(page, response.data.total);
                 })
 
             }
