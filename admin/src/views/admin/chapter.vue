@@ -91,9 +91,14 @@
         methods: {
             list(){
                 let _this = this;
-                _this.$ajax.get("http://127.0.0.1:9000/business/admin/chapter/list").then((response)=>{
+                //post请求有两种方式：1、表单方式。2、json流的方式
+                //jQuery默认使用表单的方式，但是vue,angular使用流的方式
+                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/queryChapterPage",{
+                    page:1,
+                    size:5
+                }).then((response)=>{
                     console.log("查询大章列表",response);
-                    _this.chapters = response.data;
+                    _this.chapters = response.data.list;
                 })
 
             }
