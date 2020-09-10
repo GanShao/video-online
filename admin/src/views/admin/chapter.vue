@@ -113,7 +113,7 @@
           </div>
           <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button v-on:click="save()" type="button" data-dismiss="modal" class="btn btn-primary">保存</button>
+          <button v-on:click="save()" type="button"  class="btn btn-primary">保存</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -146,7 +146,7 @@
                 //禁止点空白的地方关闭
                 $(".modal").modal({backdrop:"static"});
                 //打开模态框
-                $(".modal").modal("show");
+                $("#form-modal").modal("show");
 
             },
 
@@ -158,19 +158,24 @@
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
-                    console.log("查询大章列表", response.data.list);
-                    _this.chapters = response.data.list;
-                    _this.$refs.pagination.render(page, response.data.total);
+                    let resp = response.data;
+                    console.log("查询大章列表", resp.content.list);
+                    _this.chapters = resp.content.list;
+                    _this.$refs.pagination.render(page,  resp.content.total);
                 })
 
             },
 
             save() {
                 let _this = this;
-                console.log(_this.chapter);
                 _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/save",
                     _this.chapter).then((response) => {
-                    console.log("保存大章列表", response);
+                    let resp = response.data;
+                    //如果保存成功，关闭模态框，并刷新
+                    if(resp.success){
+                        $("#form-modal").modal("hide");
+                        _this.queryChapterPage(1);
+                    }
                 })
             }
         }
