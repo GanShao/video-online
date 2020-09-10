@@ -2,6 +2,7 @@ package com.video.server.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.video.server.Util.UuidUtil;
 import com.video.server.domain.Chapter;
 import com.video.server.domain.ChapterExample;
 import com.video.server.dto.ChapterDto;
@@ -35,5 +36,12 @@ public class ChapterService {
             chapterDtoList.add(chapterDto);
         }
         pageDto.setList(chapterDtoList);
+    }
+
+    public void save(ChapterDto chapterDto){
+        chapterDto.setId(UuidUtil.getShortUuid());
+        Chapter chapter = new Chapter();
+        BeanUtils.copyProperties(chapterDto,chapter);
+        chapterMapper.insert(chapter);
     }
 }

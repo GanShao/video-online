@@ -1,6 +1,7 @@
 package com.video.business.controller.admin;
 
 
+import com.video.server.dto.ChapterDto;
 import com.video.server.dto.PageDto;
 import com.video.server.service.ChapterService;
 import org.slf4j.Logger;
@@ -27,5 +28,14 @@ public class ChapterController {
 
         chapterService.queryChapterPage(pageDto);
         return pageDto;
+    }
+
+    @RequestMapping("/save")
+    public ChapterDto save(@RequestBody ChapterDto chapterDto) {
+        //log日志输出，使用占位符{}
+        LOG.info("chapterDto:{}",chapterDto);
+
+        chapterService.save(chapterDto);
+        return chapterDto;
     }
 }
