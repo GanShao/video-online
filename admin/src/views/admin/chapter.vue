@@ -30,57 +30,14 @@
         <td>{{chapter.courseId}}</td>
 
         <td>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button class="btn btn-xs btn-success">
-              <i class="ace-icon fa fa-check bigger-120"></i>
-            </button>
-
-            <button class="btn btn-xs btn-info">
+          <div class=" btn-group">
+            <button v-on:click="edit(chapter)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
             </button>
 
             <button class="btn btn-xs btn-danger">
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
-
-            <button class="btn btn-xs btn-warning">
-              <i class="ace-icon fa fa-flag bigger-120"></i>
-            </button>
-          </div>
-
-          <div class="hidden-md hidden-lg">
-            <div class="inline pos-rel">
-              <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-              </button>
-
-              <ul
-                class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                <li>
-                  <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-																			<span class="blue">
-																				<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-																			<span class="green">
-																				<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-																			<span class="red">
-																				<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
         </td>
       </tr>
@@ -112,8 +69,8 @@
             </form>
           </div>
           <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button v-on:click="save()" type="button"  class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button v-on:click="save()" type="button" class="btn btn-primary">保存</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -143,11 +100,20 @@
         methods: {
             add() {
                 let _this = this;
+                _this.chapter = {};
                 //禁止点空白的地方关闭
-                $(".modal").modal({backdrop:"static"});
+                $(".modal").modal({backdrop: "static"});
                 //打开模态框
                 $("#form-modal").modal("show");
+            },
 
+            edit(chapter) {
+                let _this = this;
+                _this.chapter = $.extend({}, chapter);
+                //禁止点空白的地方关闭
+                $(".modal").modal({backdrop: "static"});
+                //打开模态框
+                $("#form-modal").modal("show");
             },
 
             queryChapterPage(page) {
@@ -161,9 +127,8 @@
                     let resp = response.data;
                     console.log("查询大章列表", resp.content.list);
                     _this.chapters = resp.content.list;
-                    _this.$refs.pagination.render(page,  resp.content.total);
+                    _this.$refs.pagination.render(page, resp.content.total);
                 })
-
             },
 
             save() {
@@ -172,7 +137,7 @@
                     _this.chapter).then((response) => {
                     let resp = response.data;
                     //如果保存成功，关闭模态框，并刷新
-                    if(resp.success){
+                    if (resp.success) {
                         $("#form-modal").modal("hide");
                         _this.queryChapterPage(1);
                     }
