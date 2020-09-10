@@ -7,6 +7,9 @@ import com.video.server.dto.ResponseDto;
 import com.video.server.service.ChapterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +25,10 @@ public class ChapterController {
     @Resource
     private ChapterService chapterService;
 
-    @RequestMapping("/queryChapterPage")
-    public ResponseDto queryChapterPage(@RequestBody  PageDto pageDto) {
+    @PostMapping("/queryChapterPage")
+    public ResponseDto queryChapterPage(@RequestBody PageDto pageDto) {
         //log日志输出，使用占位符{}
-        LOG.info("pageDto:{}",pageDto);
+        LOG.info("pageDto:{}", pageDto);
 
         ResponseDto responseDto = new ResponseDto();
         chapterService.queryChapterPage(pageDto);
@@ -33,14 +36,24 @@ public class ChapterController {
         return responseDto;
     }
 
-    @RequestMapping("/save")
+    @PostMapping("/save")
     public ResponseDto save(@RequestBody ChapterDto chapterDto) {
         //log日志输出，使用占位符{}
-        LOG.info("chapterDto:{}",chapterDto);
+        LOG.info("chapterDto:{}", chapterDto);
 
         ResponseDto responseDto = new ResponseDto();
         chapterService.save(chapterDto);
         responseDto.setContent(chapterDto);
+        return responseDto;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseDto delete(@PathVariable String id) {
+        //log日志输出，使用占位符{}
+        LOG.info("id:{}", id);
+
+        ResponseDto responseDto = new ResponseDto();
+        chapterService.delete(id);
         return responseDto;
     }
 }
