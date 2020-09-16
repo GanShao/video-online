@@ -118,12 +118,14 @@
 
             queryChapterPage(page) {
                 let _this = this;
+                Loading.show();
                 //post请求有两种方式：1、表单方式。2、json流的方式
                 //jQuery默认使用表单的方式，但是vue,angular使用流的方式
                 _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/queryChapterPage", {
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
+                    Loading.hide();
                     let resp = response.data;
                     console.log("查询大章列表", resp.content.list);
                     _this.chapters = resp.content.list;
@@ -133,25 +135,38 @@
 
             save() {
                 let _this = this;
-                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/save",
-                    _this.chapter).then((response) => {
+                Loading.show();
+                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/save", _this.chapter).then((response)=>{
+                    Loading.hide();
                     let resp = response.data;
                     //如果保存成功，关闭模态框，并刷新
                     if (resp.success) {
                         $("#form-modal").modal("hide");
                         _this.queryChapterPage(1);
+                        Toast.success("保存成功！");
+                    } else {
+                        Toast.warning(resp.message)
                     }
                 })
             },
 
+            /**
+             * 点击删除
+             * @param id
+             */
             del(id) {
                 let _this = this;
-                _this.$ajax.delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id).then((response) => {
-                    let resp = response.data;
-                    if (resp.success) {
-                        _this.queryChapterPage(1);
-                    }
-                })
+                Confirm.show("删除大章后不可恢复，确认删除？", function () {
+                    Loading.show();
+                    _this.$ajax.delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id).then((response) => {
+                        Loading.hide();
+                        let resp = response.data;
+                        if (resp.success) {
+                            _this.queryChapterPage(1);
+                            Toast.success("删除成功！");
+                        }
+                    })
+                });
             }
         }
     }
