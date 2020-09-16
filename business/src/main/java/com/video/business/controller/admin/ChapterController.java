@@ -5,6 +5,7 @@ import com.video.server.dto.ChapterDto;
 import com.video.server.dto.PageDto;
 import com.video.server.dto.ResponseDto;
 import com.video.server.service.ChapterService;
+import com.video.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +41,11 @@ public class ChapterController {
     public ResponseDto save(@RequestBody ChapterDto chapterDto) {
         //log日志输出，使用占位符{}
         LOG.info("chapterDto:{}", chapterDto);
+
+        //保存校验
+        ValidatorUtil.require(chapterDto.getName(), "名称");
+        ValidatorUtil.require(chapterDto.getId(), "课程ID");
+        ValidatorUtil.length(chapterDto.getCourseId(), "课程ID", 1, 8);
 
         ResponseDto responseDto = new ResponseDto();
         chapterService.save(chapterDto);
