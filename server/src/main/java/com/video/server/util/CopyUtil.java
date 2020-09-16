@@ -1,4 +1,4 @@
-package com.video.server.Util;
+package com.video.server.util;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;

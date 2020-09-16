@@ -2,8 +2,8 @@ package com.video.server.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.video.server.Util.CopyUtil;
-import com.video.server.Util.UuidUtil;
+import com.video.server.util.CopyUtil;
+import com.video.server.util.UuidUtil;
 import com.video.server.domain.Chapter;
 import com.video.server.domain.ChapterExample;
 import com.video.server.dto.ChapterDto;
