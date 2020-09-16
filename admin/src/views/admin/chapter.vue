@@ -127,7 +127,6 @@
                 }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
-                    console.log("查询大章列表", resp.content.list);
                     _this.chapters = resp.content.list;
                     _this.$refs.pagination.render(page, resp.content.total);
                 })
