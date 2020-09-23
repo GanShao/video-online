@@ -121,7 +121,7 @@
                 Loading.show();
                 //post请求有两种方式：1、表单方式。2、json流的方式
                 //jQuery默认使用表单的方式，但是vue,angular使用流的方式
-                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/query", {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/chapter/query", {
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
@@ -142,7 +142,7 @@
                     return;
                 }
                 Loading.show();
-                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/save", _this.chapter).then((response)=>{
+                _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/chapter/save", _this.chapter).then((response) => {
                     Loading.hide();
                     let resp = response.data;
                     //如果保存成功，关闭模态框，并刷新
@@ -164,7 +164,7 @@
                 let _this = this;
                 Confirm.show("删除大章后不可恢复，确认删除？", function () {
                     Loading.show();
-                    _this.$ajax.delete("http://127.0.0.1:9000/business/admin/chapter/delete/" + id).then((response) => {
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER + "/business/admin/chapter/delete/" + id).then((response) => {
                         Loading.hide();
                         let resp = response.data;
                         if (resp.success) {
