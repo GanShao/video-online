@@ -25,7 +25,7 @@ public class ChapterService {
      * 大章列表查询
      * @param pageDto
      */
-    public void queryChapterPage(PageDto pageDto){
+    public void query(PageDto pageDto){
         //插件分页语句规则：调用startPage方法之后，对执行的第一个select语句会进行分页
         PageHelper.startPage(pageDto.getPage(),pageDto.getSize());//页码从1开始
         ChapterExample chapterExample = new ChapterExample();

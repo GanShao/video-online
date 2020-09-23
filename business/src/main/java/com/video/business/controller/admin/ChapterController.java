@@ -27,13 +27,13 @@ public class ChapterController {
     @Resource
     private ChapterService chapterService;
 
-    @PostMapping("/queryChapterPage")
-    public ResponseDto queryChapterPage(@RequestBody PageDto pageDto) {
+    @PostMapping("/query")
+    public ResponseDto query(@RequestBody PageDto pageDto) {
         //log日志输出，使用占位符{}
         LOG.info("pageDto:{}", pageDto);
 
         ResponseDto responseDto = new ResponseDto();
-        chapterService.queryChapterPage(pageDto);
+        chapterService.query(pageDto);
         responseDto.setContent(pageDto);
         return responseDto;
     }
@@ -45,7 +45,7 @@ public class ChapterController {
 
         //保存校验
         ValidatorUtil.require(chapterDto.getName(), "名称");
-        ValidatorUtil.require(chapterDto.getId(), "课程ID");
+        ValidatorUtil.require(chapterDto.getCourseId(), "课程ID");
         ValidatorUtil.length(chapterDto.getCourseId(), "课程ID", 1, 8);
 
         ResponseDto responseDto = new ResponseDto();

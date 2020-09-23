@@ -6,12 +6,12 @@
         新增
       </button>
       &nbsp;
-      <button v-on:click="queryChapterPage(1)" class="btn btn-white btn-default btn-round">
+      <button v-on:click="query(1)" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-refresh blue"></i>
         刷新
       </button>
     </p>
-    <pagination ref="pagination" v-bind:list="queryChapterPage" v-bind:itemCount="8"></pagination>
+    <pagination ref="pagination" v-bind:list="query" v-bind:itemCount="8"></pagination>
 
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
@@ -93,7 +93,7 @@
         mounted: function () {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            _this.queryChapterPage(1);
+            _this.query(1);
             // sidebar激活样式方法一
             // this.$parent.activeSidebar("business-chapter-sidebar");
         },
@@ -116,12 +116,12 @@
                 $("#form-modal").modal("show");
             },
 
-            queryChapterPage(page) {
+            query(page) {
                 let _this = this;
                 Loading.show();
                 //post请求有两种方式：1、表单方式。2、json流的方式
                 //jQuery默认使用表单的方式，但是vue,angular使用流的方式
-                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/queryChapterPage", {
+                _this.$ajax.post("http://127.0.0.1:9000/business/admin/chapter/query", {
                     page: page,
                     size: _this.$refs.pagination.size,
                 }).then((response) => {
@@ -148,7 +148,7 @@
                     //如果保存成功，关闭模态框，并刷新
                     if (resp.success) {
                         $("#form-modal").modal("hide");
-                        _this.queryChapterPage(1);
+                        _this.query(1);
                         Toast.success("保存成功！");
                     } else {
                         Toast.warning(resp.message);
@@ -168,7 +168,7 @@
                         Loading.hide();
                         let resp = response.data;
                         if (resp.success) {
-                            _this.queryChapterPage(1);
+                            _this.query(1);
                             Toast.success("删除成功！");
                         }
                     })
