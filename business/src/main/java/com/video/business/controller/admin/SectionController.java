@@ -1,13 +1,18 @@
 package com.video.business.controller.admin;
 
-import com.video.server.dto.SectionDto;
-import com.video.server.dto.PageDto;
 import com.video.server.dto.ResponseDto;
+import com.video.server.dto.SectionDto;
+import com.video.server.dto.SectionPageDto;
 import com.video.server.service.SectionService;
 import com.video.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -25,10 +30,14 @@ public class SectionController {
      * 列表查询
      */
     @PostMapping("/query")
-    public ResponseDto query(@RequestBody PageDto pageDto) {
+    public ResponseDto query(@RequestBody SectionPageDto sectionPageDto) {
         ResponseDto responseDto = new ResponseDto();
-        sectionService.query(pageDto);
-        responseDto.setContent(pageDto);
+
+        //页面控制courseId和chapterId一定有值，那么后台也需要校验
+        ValidatorUtil.require(sectionPageDto.getCourseId(), "课程ID");
+        ValidatorUtil.require(sectionPageDto.getChapterId(), "大章ID");
+        sectionService.query(sectionPageDto);
+        responseDto.setContent(sectionPageDto);
         return responseDto;
     }
 
