@@ -1,14 +1,14 @@
 package com.video.server.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.video.server.domain.Chapter;
 import com.video.server.domain.ChapterExample;
 import com.video.server.dto.ChapterDto;
-import com.video.server.dto.PageDto;
+import com.video.server.dto.ChapterPageDto;
 import com.video.server.mapper.ChapterMapper;
 import com.video.server.util.CopyUtil;
 import com.video.server.util.UuidUtil;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,14 +24,22 @@ public class ChapterService {
     /**
      * 列表查询
      */
-    public void query(PageDto pageDto) {
-        PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
+    public void query(ChapterPageDto chapterPageDto) {
+        PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
+        ChapterExample.Criteria criteria = chapterExample.createCriteria();
+
+        //courseId不为空，按照下面的条件查询
+        String courseId = chapterPageDto.getCourseId();
+        if(!StringUtils.isEmpty(courseId)){
+            criteria.andCourseIdEqualTo(courseId);
+        }
+
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         PageInfo<Chapter> pageInfo = new PageInfo<>(chapterList);
-        pageDto.setTotal(pageInfo.getTotal());
+        chapterPageDto.setTotal(pageInfo.getTotal());
         List<ChapterDto> chapterDtoList = CopyUtil.copyList(chapterList, ChapterDto.class);
-        pageDto.setList(chapterDtoList);
+        chapterPageDto.setList(chapterDtoList);
     }
 
     /**
