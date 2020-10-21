@@ -407,6 +407,13 @@
             <b class="arrow"></b>
 
             <ul class="submenu">
+              <li class="active" id="business-category-sidebar">
+                <router-link to="/business/category" class="dropdown-toggle">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  分类管理
+                  <b class="arrow fa fa-angle-down"></b>
+                </router-link>
+              </li>
               <li class="active" id="business-course-sidebar">
                 <router-link to="/business/course" class="dropdown-toggle">
                   <i class="menu-icon fa fa-caret-right"></i>
