@@ -1,26 +1,33 @@
 package com.video.server.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.video.server.domain.Course;
 import com.video.server.domain.CourseExample;
 import com.video.server.dto.CourseDto;
 import com.video.server.dto.PageDto;
 import com.video.server.mapper.CourseMapper;
+import com.video.server.mapper.my.MyCourseMapper;
 import com.video.server.util.CopyUtil;
 import com.video.server.util.UuidUtil;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class CourseService {
+    private static final Logger LOG = LoggerFactory.getLogger(CourseService.class);
 
     @Resource
     private CourseMapper courseMapper;
+
+    @Resource
+    private MyCourseMapper myCourseMapper;
 
     /**
      * 列表查询
@@ -72,5 +79,13 @@ public class CourseService {
      */
     public void delete(String id) {
         courseMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 更新课程时长
+     */
+    public void updateTime(String courseId) {
+        LOG.info("更新课程时长：{}", courseId);
+        myCourseMapper.updateTime(courseId);
     }
 }
