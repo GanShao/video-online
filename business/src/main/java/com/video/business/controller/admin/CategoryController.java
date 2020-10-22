@@ -1,5 +1,6 @@
 package com.video.business.controller.admin;
 
+import com.video.server.domain.Category;
 import com.video.server.dto.CategoryDto;
 import com.video.server.dto.PageDto;
 import com.video.server.dto.ResponseDto;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/category")
@@ -20,6 +22,17 @@ public class CategoryController {
 
     @Resource
     private CategoryService categoryService;
+
+    /**
+     * 列表查询
+     */
+    @PostMapping("/all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<Category> categoryDtoList = categoryService.all();
+        responseDto.setContent(categoryDtoList);
+        return responseDto;
+    }
 
     /**
      * 列表查询
