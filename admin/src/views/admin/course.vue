@@ -65,6 +65,14 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  分类
+                </label>
+                <div class="col-sm-10">
+                  <ul id="tree" class="ztree"></ul>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
                   <input v-model="course.name" class="form-control">
@@ -155,11 +163,14 @@
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_CHARGE: COURSE_CHARGE,
                 COURSE_STATUS: COURSE_STATUS,
+                categorys: [],
+                tree: {},
             }
         },
         mounted: function () {
             let _this = this;
             _this.$refs.pagination.size = 5;
+            _this.allCategory();
             _this.query(1);
             // sidebar激活样式方法一
             // this.$parent.activeSidebar("business-course-sidebar");
@@ -172,6 +183,8 @@
             add() {
                 let _this = this;
                 _this.course = {};
+                //新增时让所有的节点都不选中
+                _this.tree.checkAllNodes(false);
                 $("#form-modal").modal("show");
             },
 
@@ -181,6 +194,7 @@
             edit(course) {
                 let _this = this;
                 _this.course = $.extend({}, course);
+                _this.listCategory(course.id);
                 $("#form-modal").modal("show");
             },
 
@@ -217,6 +231,13 @@
                 ) {
                     return;
                 }
+
+                let categorys = _this.tree.getCheckedNodes();
+                if (Tool.isEmpty(categorys)) {
+                    Toast.warning("请选择分类！");
+                    return;
+                }
+                _this.course.categorys = categorys;
 
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response) => {
@@ -258,6 +279,68 @@
                 SessionStorage.set("course", course);
                 _this.$router.push("/business/chapter");
             },
+
+            /**
+             * 查询所有分类
+             */
+            allCategory() {
+                let _this = this;
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response)=>{
+                    Loading.hide();
+                    let resp = response.data;
+                    _this.categorys = resp.content;
+
+                    _this.initTree();
+                })
+            },
+
+            initTree() {
+                let _this = this;
+                let setting = {
+                    check: {
+                        enable: true
+                    },
+                    data: {
+                        simpleData: {
+                            idKey: "id",
+                            pIdKey: "parent",
+                            rootPId: "00000000",
+                            enable: true
+                        }
+                    }
+                };
+
+                let zNodes = _this.categorys;
+
+                _this.tree = $.fn.zTree.init($("#tree"), setting, zNodes);
+
+                // 展开所有的节点
+                // _this.tree.expandAll(true);
+            },
+
+            /**
+             * 查找课程下所有分类
+             * @param courseId
+             */
+            listCategory(courseId) {
+                let _this = this;
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
+                    Loading.hide();
+                    console.log("查找课程下所有分类结果：", res);
+                    let response = res.data;
+                    let categorys = response.content;
+
+                    // 勾选查询到的分类
+                    _this.tree.checkAllNodes(false);
+                    for (let i = 0; i < categorys.length; i++) {
+                        let node = _this.tree.getNodeByParam("id", categorys[i].categoryId);
+                        _this.tree.checkNode(node, true);
+                    }
+                })
+            },
+
         }
     }
 </script>
