@@ -192,7 +192,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">排序</h4>
           </div>
           <div class="modal-body">
@@ -366,7 +367,7 @@
              */
             toChapter(course) {
                 let _this = this;
-                SessionStorage.set("course", course);
+                SessionStorage.set(SESSION_KEY_COURSE, course);
                 _this.$router.push("/business/chapter");
             },
 
@@ -378,21 +379,21 @@
                 let id = course.id;
                 _this.course = course;
                 $("#content").summernote({
-                    focus:true,
-                    height:300
+                    focus: true,
+                    height: 300
                 });
                 //先清空历史文本
-                $("#content").summernote('code','');
+                $("#content").summernote('code', '');
                 Loading.show();
-                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id).then((response)=>{
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id).then((response) => {
                     Loading.hide();
                     let resp = response.data;
-                    if(resp.success){
-                      $("#course-content-modal").modal({backdrop:'static',keyboard:false});
-                      if(resp.content){
-                          $("#content").summernote('code',resp.content.content);
-                      }
-                    }else {
+                    if (resp.success) {
+                        $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
+                        if (resp.content) {
+                            $("#content").summernote('code', resp.content.content);
+                        }
+                    } else {
                         Toast.warning(resp.message);
                     }
                 })
@@ -401,18 +402,18 @@
             /**
              * 保存内容
              */
-            saveContent(){
+            saveContent() {
                 let _this = this;
                 let content = $("#content").summernote('code');
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content',{
-                   id:_this.course.id,
-                    content:content
-                }).then((response)=>{
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
+                    id: _this.course.id,
+                    content: content
+                }).then((response) => {
                     Loading.hide();
                     let resp = response.data;
-                    if(resp.success){
+                    if (resp.success) {
                         Toast.warning("内容保存成功！");
-                    }else {
+                    } else {
                         Toast.warning(resp.message);
                     }
                 })
@@ -425,7 +426,7 @@
             allCategory() {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response)=>{
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response) => {
                     Loading.hide();
                     let resp = response.data;
                     _this.categorys = resp.content;
@@ -465,7 +466,7 @@
             listCategory(courseId) {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res) => {
                     Loading.hide();
                     console.log("查找课程下所有分类结果：", res);
                     let response = res.data;

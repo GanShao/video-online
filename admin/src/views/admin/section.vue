@@ -153,16 +153,16 @@
         mounted: function () {
             let _this = this;
             _this.$refs.pagination.size = 5;
-            let course = SessionStorage.get("course") || {};
-            let chapter = SessionStorage.get("chapter") || {};
-            if(Tool.isEmpty(course) || Tool.isEmpty(chapter)){
+            let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
+            let chapter = SessionStorage.get(SESSION_KEY_CHAPTER) || {};
+            if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
                 _this.$router.push("welcome");
             }
             _this.course = course;
             _this.chapter = chapter;
             _this.query(1);
             // sidebar激活样式方法一
-            // this.$parent.activeSidebar("business-section-sidebar");
+            this.$parent.activeSidebar("business-course-sidebar");
 
         },
         methods: {
