@@ -14,48 +14,61 @@
 
     <pagination ref="pagination" v-bind:list="query" v-bind:itemCount="8"></pagination>
 
-    <table id="simple-table" class="table  table-bordered table-hover">
-      <thead>
-      <tr>
-        <th>id</th>
-        <th>姓名</th>
-        <th>昵称</th>
-        <th>头像</th>
-        <th>职位</th>
-        <th>座右铭</th>
-        <th>简介</th>
-        <th>操作</th>
-      </tr>
-      </thead>
+    <div class="row">
+      <div v-for="teacher in teachers" class="col-md-3">
+        <div>
+          <span class="profile-picture">
+            <img v-show="!teacher.image" class="editable img-responsive editable-click editable-empty"
+                 src="/static/image/讲师头像/头像1.jpg" v-bind:title="teacher.intro"/>
+            <img v-show="teacher.image" class="editable img-responsive editable-click editable-empty"
+                 v-bind:src="teacher.image" v-bind:title="teacher.intro"/>
+          </span>
 
-      <tbody>
-      <tr v-for="teacher in teachers">
-        <td>{{teacher.id}}</td>
-        <td>{{teacher.name}}</td>
-        <td>{{teacher.nickname}}</td>
-        <td>{{teacher.image}}</td>
-        <td>{{teacher.position}}</td>
-        <td>{{teacher.motto}}</td>
-        <td>{{teacher.intro}}</td>
-      <td>
-        <div class="hidden-sm hidden-xs btn-group">
+          <div class="space-4"></div>
+
+          <div class="width-85 label label-info label-xlg arrowed-in arrowed-in-right">
+            <div class="inline position-relative">
+              <a href="javascript:;" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                <i class="ace-icon fa fa-circle light-green"></i>
+                &nbsp;
+                <span class="white">{{teacher.position}}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-6"></div>
+
+        <div class="text-center">
+          <a href="javascript:;" class="text-info bigger-110" v-bind:title="teacher.motto">
+            <i class="ace-icon fa fa-user"></i>
+            {{teacher.name}}【{{teacher.nickname}}】
+          </a>
+        </div>
+
+        <div class="space-6"></div>
+
+        <div class="profile-social-links align-center">
           <button v-on:click="edit(teacher)" class="btn btn-xs btn-info">
             <i class="ace-icon fa fa-pencil bigger-120"></i>
           </button>
+          &nbsp;
           <button v-on:click="del(teacher.id)" class="btn btn-xs btn-danger">
             <i class="ace-icon fa fa-trash-o bigger-120"></i>
           </button>
         </div>
-      </td>
-      </tr>
-      </tbody>
-    </table>
+
+        <div class="hr hr16 dotted"></div>
+
+      </div>
+    </div>
 
     <div id="form-modal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">表单</h4>
           </div>
           <div class="modal-body">
@@ -93,7 +106,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">简介</label>
                 <div class="col-sm-10">
-                  <input v-model="teacher.intro" class="form-control">
+                  <textarea v-model="teacher.intro" class="form-control" rows="5"></textarea>
                 </div>
               </div>
             </form>
@@ -109,111 +122,112 @@
 </template>
 
 <script>
-  import Pagination from "../../components/pagination";
-  export default {
-    components: {Pagination},
-    name: "business-teacher",
-    data: function() {
-      return {
-        teacher: {},
-        teachers: [],
-      }
-    },
-    mounted: function() {
-      let _this = this;
-      _this.$refs.pagination.size = 5;
-      _this.query(1);
-      // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-teacher-sidebar");
+    import Pagination from "../../components/pagination";
 
-    },
-    methods: {
-      /**
-       * 点击【新增】
-       */
-      add() {
-        let _this = this;
-        _this.teacher = {};
-        $("#form-modal").modal("show");
-      },
-
-      /**
-       * 点击【编辑】
-       */
-      edit(teacher) {
-        let _this = this;
-        _this.teacher = $.extend({}, teacher);
-        $("#form-modal").modal("show");
-      },
-
-      /**
-       * 列表查询
-       */
-      query(page) {
-        let _this = this;
-        Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/query', {
-          page: page,
-          size: _this.$refs.pagination.size,
-        }).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          _this.teachers = resp.content.list;
-          _this.$refs.pagination.render(page, resp.content.total);
-
-        })
-      },
-
-      /**
-       * 点击【保存】
-       */
-      save() {
-        let _this = this;
-
-        // 保存校验
-        if (1 != 1
-          || !Validator.require(_this.teacher.name, "姓名")
-          || !Validator.length(_this.teacher.name, "姓名", 1, 50)
-          || !Validator.length(_this.teacher.nickname, "昵称", 1, 50)
-          || !Validator.length(_this.teacher.image, "头像", 1, 100)
-          || !Validator.length(_this.teacher.position, "职位", 1, 50)
-          || !Validator.length(_this.teacher.motto, "座右铭", 1, 50)
-          || !Validator.length(_this.teacher.intro, "简介", 1, 500)
-        ) {
-          return;
-        }
-
-        Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          if (resp.success) {
-            $("#form-modal").modal("hide");
-            _this.query(1);
-            Toast.success("保存成功！");
-          } else {
-            Toast.warning(resp.message)
-          }
-        })
-      },
-
-      /**
-       * 点击【删除】
-       */
-      del(id) {
-        let _this = this;
-        Confirm.show("删除讲师后不可恢复，确认删除？", function () {
-          Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response)=>{
-            Loading.hide();
-            let resp = response.data;
-            if (resp.success) {
-              _this.query(1);
-              Toast.success("删除成功！");
+    export default {
+        components: {Pagination},
+        name: "business-teacher",
+        data: function () {
+            return {
+                teacher: {},
+                teachers: [],
             }
-          })
-        });
-      }
+        },
+        mounted: function () {
+            let _this = this;
+            _this.$refs.pagination.size = 5;
+            _this.query(1);
+            // sidebar激活样式方法一
+            // this.$parent.activeSidebar("business-teacher-sidebar");
+
+        },
+        methods: {
+            /**
+             * 点击【新增】
+             */
+            add() {
+                let _this = this;
+                _this.teacher = {};
+                $("#form-modal").modal("show");
+            },
+
+            /**
+             * 点击【编辑】
+             */
+            edit(teacher) {
+                let _this = this;
+                _this.teacher = $.extend({}, teacher);
+                $("#form-modal").modal("show");
+            },
+
+            /**
+             * 列表查询
+             */
+            query(page) {
+                let _this = this;
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/query', {
+                    page: page,
+                    size: _this.$refs.pagination.size,
+                }).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    _this.teachers = resp.content.list;
+                    _this.$refs.pagination.render(page, resp.content.total);
+
+                })
+            },
+
+            /**
+             * 点击【保存】
+             */
+            save() {
+                let _this = this;
+
+                // 保存校验
+                if (1 != 1
+                    || !Validator.require(_this.teacher.name, "姓名")
+                    || !Validator.length(_this.teacher.name, "姓名", 1, 50)
+                    || !Validator.length(_this.teacher.nickname, "昵称", 1, 50)
+                    || !Validator.length(_this.teacher.image, "头像", 1, 100)
+                    || !Validator.length(_this.teacher.position, "职位", 1, 50)
+                    || !Validator.length(_this.teacher.motto, "座右铭", 1, 50)
+                    || !Validator.length(_this.teacher.intro, "简介", 1, 500)
+                ) {
+                    return;
+                }
+
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                    if (resp.success) {
+                        $("#form-modal").modal("hide");
+                        _this.query(1);
+                        Toast.success("保存成功！");
+                    } else {
+                        Toast.warning(resp.message)
+                    }
+                })
+            },
+
+            /**
+             * 点击【删除】
+             */
+            del(id) {
+                let _this = this;
+                Confirm.show("删除讲师后不可恢复，确认删除？", function () {
+                    Loading.show();
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response) => {
+                        Loading.hide();
+                        let resp = response.data;
+                        if (resp.success) {
+                            _this.query(1);
+                            Toast.success("删除成功！");
+                        }
+                    })
+                });
+            }
+        }
     }
-  }
 </script>
