@@ -22,6 +22,15 @@ public class TeacherService {
     private TeacherMapper teacherMapper;
 
     /**
+     * 初始化查询所有的老师
+     */
+    public List<TeacherDto> all() {
+        TeacherExample teacherExample = new TeacherExample();
+        List<Teacher> teacherList = teacherMapper.selectByExample(teacherExample);
+        return CopyUtil.copyList(teacherList, TeacherDto.class);
+    }
+
+    /**
      * 列表查询
      */
     public void query(PageDto pageDto) {

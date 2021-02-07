@@ -1,15 +1,21 @@
 package com.video.business.controller.admin;
 
-import com.video.server.dto.TeacherDto;
 import com.video.server.dto.PageDto;
 import com.video.server.dto.ResponseDto;
+import com.video.server.dto.TeacherDto;
 import com.video.server.service.TeacherService;
 import com.video.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/teacher")
@@ -20,6 +26,17 @@ public class TeacherController {
 
     @Resource
     private TeacherService teacherService;
+
+    /**
+     * 初始化查询所有的老师
+     */
+    @PostMapping("/all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<TeacherDto> teacherDtoList = teacherService.all();
+        responseDto.setContent(teacherDtoList);
+        return responseDto;
+    }
 
     /**
      * 列表查询
