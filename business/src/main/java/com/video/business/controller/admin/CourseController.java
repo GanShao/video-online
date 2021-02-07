@@ -5,6 +5,7 @@ import com.video.server.dto.CourseContentDto;
 import com.video.server.dto.CourseDto;
 import com.video.server.dto.PageDto;
 import com.video.server.dto.ResponseDto;
+import com.video.server.dto.SortDto;
 import com.video.server.service.CourseCategoryService;
 import com.video.server.service.CourseService;
 import com.video.server.util.ValidatorUtil;
@@ -103,6 +104,19 @@ public class CourseController {
     public ResponseDto saveContent(@RequestBody CourseContentDto contentDto) {
         ResponseDto responseDto = new ResponseDto();
         courseService.saveContent(contentDto);
+        return responseDto;
+    }
+
+    /**
+     * 更新排序请求
+     * @param sortDto
+     * @return
+     */
+    @RequestMapping(value = "/sort")
+    public ResponseDto sort(@RequestBody SortDto sortDto) {
+        LOG.info("更新排序");
+        ResponseDto responseDto = new ResponseDto();
+        courseService.sort(sortDto);
         return responseDto;
     }
 

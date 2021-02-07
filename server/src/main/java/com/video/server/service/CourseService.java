@@ -8,6 +8,7 @@ import com.video.server.domain.CourseExample;
 import com.video.server.dto.CourseContentDto;
 import com.video.server.dto.CourseDto;
 import com.video.server.dto.PageDto;
+import com.video.server.dto.SortDto;
 import com.video.server.mapper.CourseContentMapper;
 import com.video.server.mapper.CourseMapper;
 import com.video.server.mapper.my.MyCourseMapper;
@@ -16,6 +17,7 @@ import com.video.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -122,5 +124,25 @@ public class CourseService {
             i = courseContentMapper.insert(content);
         }
         return i;
+    }
+
+    /**
+     * 排序
+     * @param sortDto
+     */
+    @Transactional
+    public void sort(SortDto sortDto) {
+        // 修改当前记录的排序值
+        myCourseMapper.updateSort(sortDto);
+
+        // 如果排序值变大
+        if (sortDto.getNewSort() > sortDto.getOldSort()) {
+            myCourseMapper.moveSortsForward(sortDto);
+        }
+
+        // 如果排序值变小
+        if (sortDto.getNewSort() < sortDto.getOldSort()) {
+            myCourseMapper.moveSortsBackward(sortDto);
+        }
     }
 }
