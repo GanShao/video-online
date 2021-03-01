@@ -88,7 +88,11 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10">
-                  <input type="file" v-on:change="uploadImage()" id="file-upload-input">
+                  <button type="button" v-on:click="selectImage()" class="btn btn-white btn-default btn-round">
+                    <i class="ace-icon fa fa-edit"></i>
+                    上传头像
+                  </button>
+                  <input class="hidden" type="file" v-on:change="uploadImage()" id="file-upload-input">
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
                       <!--img-responsive bootstrap内置样式，图片自适应-->
@@ -236,7 +240,7 @@
             },
 
             /**
-             * 头像上传
+             * 头像上传方法
              */
             uploadImage() {
                 let _this = this;
@@ -253,7 +257,15 @@
                     console.log("讲师头像" + image);
                     _this.teacher.image = image;
                 })
+            },
+
+            /**
+             * 上传头像按钮
+             */
+            selectImage(){
+                $("#file-upload-input").trigger("click");
             }
+
         }
     }
 </script>
