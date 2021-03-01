@@ -30,13 +30,13 @@ public class UploadController {
         //上传文件保存到本地
         String fileName = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
-        String fullPath = "/Users/gs/IdeaProjects/video-player/doc/fileImage" + key + "-" + fileName;
+        String fullPath = "/Users/gs/IdeaProjects/video-player/doc/fileImage/" + key + "-" + fileName;
         File dest = new File(fullPath);
         file.transferTo(dest);
         Log.info(dest.getAbsolutePath());
 
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setMessage("http://127.0.0.1:9003/file/f/teacher" + key + "-" + fileName);
+        responseDto.setContent("http://127.0.0.1:9000/file/f/fileImage/" + key + "-" + fileName);
         return responseDto;
     }
 }

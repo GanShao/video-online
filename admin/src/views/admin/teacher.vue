@@ -238,14 +238,17 @@
              */
             uploadImage() {
                 let _this = this;
-                let formatData = new Window().FormData();
+                //vue 中使用 new window.FormData() 创建 FormData 对象
+                let formData = new window.FormData();
                 //key : "file" 必须要与后端controller参数名一样
-                formatData.append('file', document.querySelector('#file-upload-input').files[0]);
+                formData.append('file', document.querySelector('#file-upload-input').files[0]);
                 Loading.show();
-                _this.$ajax.delete(process.env.VUE_APP_SERVER + '/file/admin/upload/', formatData).then((response) => {
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response) => {
                     Loading.hide();
+                    console.log(response);
                     let resp = response.data;
                     let image = resp.content;
+                    console.log("讲师头像" + image);
                     _this.teacher.image = image;
                 })
             }
