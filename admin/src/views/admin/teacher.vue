@@ -88,7 +88,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10">
-                  <input v-model="teacher.image" class="form-control">
+                  <input type="file" v-on:change="uploadImage()" id="file-upload-input">
                 </div>
               </div>
               <div class="form-group">
@@ -227,6 +227,21 @@
                         }
                     })
                 });
+            },
+
+            /**
+             * 头像上传
+             */
+            uploadImage(){
+                let _this = this;
+                let formatData = new Window().FormData();
+                //key : "file" 必须要与后端controller参数名一样
+                formatData.append('file',document.querySelector('#file-upload-input').files[0]);
+                Loading.show();
+                _this.$ajax.delete(process.env.VUE_APP_SERVER + '/file/admin/upload/',formatData).then((response) => {
+                    Loading.hide();
+                    let resp = response.data;
+                })
             }
         }
     }
