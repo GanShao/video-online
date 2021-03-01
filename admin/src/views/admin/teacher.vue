@@ -89,6 +89,10 @@
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10">
                   <input type="file" v-on:change="uploadImage()" id="file-upload-input">
+                  <div class="col-md-4">
+                    <!--img-responsive bootstrap内置样式，图片自适应-->
+                    <img v-bind:src="teacher.image" class="img-responsive">
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -232,15 +236,17 @@
             /**
              * 头像上传
              */
-            uploadImage(){
+            uploadImage() {
                 let _this = this;
                 let formatData = new Window().FormData();
                 //key : "file" 必须要与后端controller参数名一样
-                formatData.append('file',document.querySelector('#file-upload-input').files[0]);
+                formatData.append('file', document.querySelector('#file-upload-input').files[0]);
                 Loading.show();
-                _this.$ajax.delete(process.env.VUE_APP_SERVER + '/file/admin/upload/',formatData).then((response) => {
+                _this.$ajax.delete(process.env.VUE_APP_SERVER + '/file/admin/upload/', formatData).then((response) => {
                     Loading.hide();
                     let resp = response.data;
+                    let image = resp.content;
+                    _this.teacher.image = image;
                 })
             }
         }
