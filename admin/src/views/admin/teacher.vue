@@ -92,7 +92,7 @@
                     <i class="ace-icon fa fa-edit"></i>
                     上传头像
                   </button>
-                  <input class="hidden" type="file" v-on:change="uploadImage()" id="file-upload-input">
+                  <input class="hidden" type="file" ref="file" v-on:change="uploadImage()" id="file-upload-input">
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
                       <!--img-responsive bootstrap内置样式，图片自适应-->
@@ -246,8 +246,28 @@
                 let _this = this;
                 //vue 中使用 new window.FormData() 创建 FormData 对象
                 let formData = new window.FormData();
+                //使用$refs获取vue组件
+                let file = _this.$refs.file.files[0];//相当于document.querySelector('#file-upload-input').files[0]
+
+                // 判断文件格式
+                let suffixs = ["jpg", "jepg", "png"];
+                let fileName = file.name;
+                let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
+                let validateSuffix = false;
+                for (let i = 0; i < suffixs.length; i++) {
+                    if (suffixs[i].toLowerCase() === suffix) {
+                        validateSuffix = true;
+                        break;
+                    }
+                }
+                if (!validateSuffix) {
+                    Toast.warning("文件格式不正确！只支持上传：" + suffixs.join(","));
+                    // $("#" + _this.inputId + "-input").val("");
+                    return;
+                }
+
                 //key : "file" 必须要与后端controller参数名一样
-                formData.append('file', document.querySelector('#file-upload-input').files[0]);
+                formData.append('file', file);
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response) => {
                     Loading.hide();
@@ -262,7 +282,7 @@
             /**
              * 上传头像按钮
              */
-            selectImage(){
+            selectImage() {
                 $("#file-upload-input").trigger("click");
             }
 
