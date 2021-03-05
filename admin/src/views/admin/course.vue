@@ -30,7 +30,8 @@
               <a href="#" class="blue">{{course.name}}</a>
             </h3>
 
-            <div v-for="teacher in teachers.filter(t=>{return t.id===course.teacherId})" class="profile-activity clearfix">
+            <div v-for="teacher in teachers.filter(t=>{return t.id===course.teacherId})"
+                 class="profile-activity clearfix">
               <div>
                 <img v-show="!teacher.image" class="pull-left" src="/ace/assets/images/avatars/avatar5.png">
                 <img v-show="teacher.image" class="pull-left" v-bind:src="teacher.image">
@@ -90,6 +91,22 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label">封面</label>
+                <div class="col-sm-10">
+                  <file v-bind:input-id="'image-upload'"
+                        v-bind:text="'上传封面'"
+                        v-bind:suffixs="['jpg', 'jpeg', 'png']"
+                        v-bind:use="FILE_USE.COURSE.key"
+                        v-bind:after-upload="afterUpload"></file>
+                  <div v-show="course.image" class="row">
+                    <div class="col-md-6">
+                      <!--img-responsive bootstrap内置样式，图片自适应-->
+                      <img v-bind:src="course.image" class="img-responsive">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
                   <input v-model="course.name" class="form-control">
@@ -119,12 +136,6 @@
                 <label class="col-sm-2 control-label">价格（元）</label>
                 <div class="col-sm-10">
                   <input v-model="course.price" class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">封面</label>
-                <div class="col-sm-10">
-                  <input v-model="course.image" class="form-control">
                 </div>
               </div>
               <div class="form-group">
@@ -253,9 +264,10 @@
 
 <script>
     import Pagination from "../../components/pagination";
+    import File from "../../components/file";
 
     export default {
-        components: {Pagination},
+        components: {Pagination, File},
         name: "business-course",
         data: function () {
             return {
@@ -264,6 +276,7 @@
                 COURSE_LEVEL: COURSE_LEVEL,
                 COURSE_CHARGE: COURSE_CHARGE,
                 COURSE_STATUS: COURSE_STATUS,
+                FILE_USE: FILE_USE,
                 categorys: [],
                 tree: {},
                 sort: {
@@ -543,12 +556,21 @@
             allTeacher() {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all').then((response)=>{
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all').then((response) => {
                     Loading.hide();
                     let resp = response.data;
                     _this.teachers = resp.content;
                 })
             },
+
+            /**
+             * 接收file组件回调函数返回的数据
+             */
+            afterUpload(resp) {
+                let _this = this;
+                let image = resp.content.path;
+                _this.course.image = image;
+            }
 
         }
     }
