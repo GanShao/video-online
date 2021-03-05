@@ -102,7 +102,7 @@
                   <div v-show="section.video" class="row">
                     <div class="col-md-9">
                       <!--controls 属性规定浏览器应该为视频提供播放控件。-->
-                      <video v-bind:src="section.video" controls="controls"></video>
+                      <video id="video" v-bind:src="section.video" controls="controls"></video>
                     </div>
                   </div>
                 </div>
@@ -271,12 +271,21 @@
                 let _this = this;
                 let video = resp.content.path;
                 _this.section.video = video;
+                _this.getVideoTime();
+            },
+            /**
+             *
+             */
+            getVideoTime() {
+                let _this = this;
+                let videoEle = document.getElementById("video");
+                _this.section.time = parseInt(videoEle.duration, 10);
             }
         }
     }
 </script>
 <style scoped>
-  video{
+  video {
     width: 100%;
     height: auto;
     margin-top: 10px;
