@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ServerGenerator {
-    static String MODULE = "file";
+    static String MODULE = "business";
     static String toDtoPath = "server/src/main/java/com/video/server/dto/";
     static String toServicePath = "server/src/main/java/com/video/server/service/";
     static String toControllerPath = MODULE + "/src/main/java/com/video/" + MODULE + "/controller/admin/";

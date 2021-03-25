@@ -54,7 +54,7 @@
               <button v-on:click="toChapter(course)" class="btn btn-white btn-xs btn-info btn-round">
                 大章
               </button>&nbsp;
-              <button v-on:click="editContent(course)" class="btn btn-white btn-xs btn-info btn-round">
+              <button v-on:click="toContent(course)" class="btn btn-white btn-xs btn-info btn-round">
                 内容
               </button>&nbsp;
               <button v-on:click="openSortModal(course)" class="btn btn-white btn-xs btn-info btn-round">
@@ -184,39 +184,6 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-
-    <!--富文本框-->
-    <div id="course-content-modal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-            <h4 class="modal-title">内容编辑</h4>
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-lg-12">
-                  <div id="content"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
-              <i class="ace-icon fa fa-times"></i>
-              取消
-            </button>
-            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="saveContent()">
-              <i class="ace-icon fa fa-plus blue"></i>
-              保存
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
     <!--排序弹出框-->
     <div id="course-sort-modal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -285,6 +252,7 @@
                     newSort: 0
                 },
                 teachers: [],
+                files: []
             }
         },
         mounted: function () {
@@ -406,52 +374,12 @@
             },
 
             /**
-             * 打开内容编辑框
+             * 点击【内容】
              */
-            editContent(course) {
+            toContent(course) {
                 let _this = this;
-                let id = course.id;
-                _this.course = course;
-                $("#content").summernote({
-                    focus: true,
-                    height: 300
-                });
-                //先清空历史文本
-                $("#content").summernote('code', '');
-                Loading.show();
-                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/' + id).then((response) => {
-                    Loading.hide();
-                    let resp = response.data;
-                    if (resp.success) {
-                        $("#course-content-modal").modal({backdrop: 'static', keyboard: false});
-                        if (resp.content) {
-                            $("#content").summernote('code', resp.content.content);
-                        }
-                    } else {
-                        Toast.warning(resp.message);
-                    }
-                })
-            },
-
-            /**
-             * 保存内容
-             */
-            saveContent() {
-                let _this = this;
-                let content = $("#content").summernote('code');
-                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content', {
-                    id: _this.course.id,
-                    content: content
-                }).then((response) => {
-                    Loading.hide();
-                    let resp = response.data;
-                    if (resp.success) {
-                        Toast.warning("内容保存成功！");
-                    } else {
-                        Toast.warning(resp.message);
-                    }
-                })
-
+                SessionStorage.set(SESSION_KEY_COURSE, course);
+                _this.$router.push("/business/content");
             },
 
             /**
