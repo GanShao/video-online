@@ -29,7 +29,7 @@
         <th>标题</th>
         <th>课程</th>
         <th>大章</th>
-        <th>视频</th>
+        <th>VOD</th>
         <th>时长</th>
         <th>收费</th>
         <th>顺序</th>
@@ -51,6 +51,9 @@
         <td>{{section.vod}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
+            <button v-on:click="play(section)" class="btn btn-xs btn-info">
+              <i class="ace-icon fa fa-video-camera bigger-120"></i>
+            </button>
             <button v-on:click="edit(section)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
             </button>
@@ -101,8 +104,9 @@
                         v-bind:after-upload="afterUpload"></vod>
                   <div v-show="section.video" class="row">
                     <div class="col-md-9">
+                      <player ref="player" v-bind:player-id="'form-player-div'"></player>
                       <!--controls 属性规定浏览器应该为视频提供播放控件。-->
-                      <video id="video" v-bind:src="section.video" controls="controls"></video>
+                      <video id="video" v-bind:src="section.video" controls="controls" class="hidden"></video>
                     </div>
                   </div>
                 </div>
@@ -110,7 +114,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">时长</label>
                 <div class="col-sm-10">
-                  <input v-model="section.time" class="form-control">
+                  <input v-model="section.time" class="form-control" disabled>
                 </div>
               </div>
               <div class="form-group">
@@ -154,15 +158,19 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <!--带有弹出框到播放器-->
+    <modal-player ref="modalPlayer"></modal-player>
   </div>
 </template>
 
 <script>
     import Pagination from "../../components/pagination";
     // import BigFile from "../../components/big-file";
+    import ModalPlayer from "../../components/modal-player";
+    import Player from "../../components/player";
     import Vod from "../../components/vod";
     export default {
-        components: { Pagination, Vod},
+        components: { Pagination, Vod, Player, ModalPlayer},
         name: "business-section",
         data: function () {
             return {
@@ -233,6 +241,8 @@
              */
             save() {
                 let _this = this;
+                //获取到可播放到地址是有时效的，就算保存到数据库也会过期，以后根据vod播放
+                _this.section.video = "";
 
                 // 保存校验
                 if (1 != 1
@@ -282,16 +292,29 @@
             afterUpload(resp) {
                 let _this = this;
                 let video = resp.content.path;
+                let vod = resp.content.vod;
                 _this.section.video = video;
-                _this.getVideoTime();
+                _this.section.vod = vod;
+                _this.getTime();
+                _this.$refs.player.playUrl(video);
             },
             /**
-             *
+             * 获取时长
              */
-            getVideoTime() {
+            getTime() {
                 let _this = this;
-                let videoEle = document.getElementById("video");
-                _this.section.time = parseInt(videoEle.duration, 10);
+                setTimeout(function () {
+                    let ele = document.getElementById("video");
+                    _this.section.time = parseInt(ele.duration, 10);
+                }, 1000);
+            },
+            /**
+             * 播放视频
+             * @param section
+             */
+            play(section) {
+                let _this = this;
+                _this.$refs.modalPlayer.playVod(section.vod);
             }
         }
     }
